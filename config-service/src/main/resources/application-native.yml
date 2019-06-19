@@ -1,0 +1,48 @@
+# the application-native is only taken if this microservice is run with Profile native
+# In that case the .yml files used will be the ones in classpath:/config
+server:
+  # I am having an issue with Eureka(bug?) it is reporting a wrong IP address so let's make this micro service to be bound
+  # in all interfaces so even if the eureka server provides a wrong Ip the micro service will be accessible anyways
+  # because it is bound on all IPs available on this system
+  address: 0.0.0.0
+  # the port used most of the times is 8888, I used 8889 just to prove that config clients are configured as expected
+  # because by default they all fetch from localhost:8888 so if you indeed use the default server port, even if you have made
+  # a misconfiguration your config clients will still work because they fetch anyways from localhost:8888, so let's run our config server
+  # at 8889, that way, any mis-configured config client will show up with a error.
+  port: ${PORT:8889}
+
+spring:
+  application:
+    name: config-service
+
+  cloud:
+    config:
+      label: master
+      server:
+        # In native profile provide config files from the resources/config/ folder
+        native:
+          search-locations: file:./config-services-properties
+          # By default it will lookup the classpath:/config dir if you don't set search-locations or you set it like:
+          # search-locations: classpath:/config
+  jackson:
+    serialization:
+      indent_output: true
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+logging:
+  level:
+    root: error
+    org.springframework: info
+    com.melardev: debug
+

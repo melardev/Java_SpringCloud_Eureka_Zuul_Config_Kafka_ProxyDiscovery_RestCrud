@@ -1,0 +1,31 @@
+server:
+  port: ${PORT:8083}
+
+# App
+app:
+  kafka:
+    topics:
+      todo-created:  ms-todo-created
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: ms_todo_created_event_consumers
+
+  # Don't forget to enable less secure apps, read more at:
+  # // https://support.google.com/accounts/answer/6010255
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: non-existent-email-microservices@gmail.com # replace this with your email
+    password: very_very_fake_password_remember_its_fake_ # replace this with your password
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+
+logging:
+  level:
+    root: warn
+    com.melardev: trace
+    org.springframwork.mail: trace
